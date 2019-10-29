@@ -5,70 +5,22 @@ import Appointment from "components/Appointment";
 import DayList from "components/DayList";
 import "components/Application.scss";
 
-const days = [
-  {
-    id: 1,
-    name: "Monday",
-    spots: 2,
-  },
-  {
-    id: 2,
-    name: "Tuesday",
-    spots: 5,
-  },
-  {
-    id: 3,
-    name: "Wednesday",
-    spots: 0,
-  },
-];
 
-const appointments = [
-  {
-    id: 1,
-    time: "12pm",
-  },
-  {
-    id: 2,
-    time: "1pm",
-    interview: {
-      student: "Lydia Miller-Jones",
-      interviewer: {
-        id: 1,
-        name: "Sylvia Palmer",
-        avatar: "https://i.imgur.com/LpaY82x.png"
-      }
-    }
-  },
-  {
-    id: 3,
-    time: "2pm",
-    interview: {
-      student: "Lolwut",
-      interviewer: {
-        id:2,
-        name:"Based Interviewer",
-        avatar: "https://i.imgur.com/LpaY82x.png"
-      }
-    }
-  },
-  {
-    id: 4,
-    time: "3pm",
-    interview: {
-      student: "Abraham Lincoln",
-      interviewer:{
-        id:3,
-        name:"George Washington",
-        avatar:"https://i.imgur.com/twYrpay.jpg"
-      }
-    }
-  }
-];
+
+
 
 
 export default function Application(props) {
   const [day, setDay] = useState("Monday");
+  const [days, setDays] = useState([]);
+  const [appointments, setAppointments] = useState([]);
+
+  useEffect(() => {
+    axios('/api/days')
+      .then(response => {
+        setDays(response.data);
+      })
+  }, [])
 
   return (
     <main className="layout">
