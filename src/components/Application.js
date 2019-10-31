@@ -23,25 +23,28 @@ export default function Application(props) {
     return setState({...state, day})
   }
   
+  
   const bookInterview = function(id, interview){
     console.log(id,interview);
-
     const appointment = {
       ...state.appointments[id],
       interview: {...interview}
     }
-
     const appointments = {
       ...state.appointments,
       [id]: appointment
     }
-
-
-    axios.put(`/api/appointments/${id}`, {
+    return axios.put(`/api/appointments/${id}`, {
       interview
-    }).then(setState({...state, appointments}))
+    }).then(setState({...state, appointments})).catch((err) => console.log(err))
   }
 
+  const cancelInterview = function(id){
+    
+    return axios.delete(`/api/appointments/${id}`, {
+      interview: null
+    }).then(setState({...state})).catch((err) => console.log(err));
+  }
 
   
 
@@ -70,6 +73,7 @@ export default function Application(props) {
               interview={interview}
               interviewers={interviewers}
               bookInterview={bookInterview}
+              cancelInterview={cancelInterview}
             />
       )
   })
