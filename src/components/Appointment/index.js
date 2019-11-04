@@ -7,6 +7,7 @@ import Form from "components/Appointment/Form"
 import useVisualMode from "hooks/useVisualMode";
 import Status from './Status';
 import Confirm from './Confirm';
+import Error from "./Error";
 
 export default function Appointment(props){
   const EMPTY = "EMPTY";
@@ -16,6 +17,8 @@ export default function Appointment(props){
   const CONFIRM = "CONFIRM";
   const DELETING = "DELETING";
   const EDIT = "EDIT";
+  const ERROR_SAVING = "ERROR_SAVING";
+  const ERROR_DELETING = "ERROR_DELETING";
 
   const {mode, transition, back} = useVisualMode(
     props.interview ? SHOW : EMPTY
@@ -25,19 +28,24 @@ export default function Appointment(props){
 
   const save = function(name, interviewer){
     transition(SAVING);    
-    console.log("SAVE CALL", name, interviewer);
     const interview = {
       student: name,
       interviewer: interviewer
     }
-    props.bookInterview(props.id, interview).then(() => transition(SHOW)).catch((err) => console.log(err));
+    props
+      .bookInterview(props.id, interview)
+      .then(() => transition(SHOW))
+      .catch((err) => transition(ERROR_SAVING, true));
   }
 
 
   const onDeleteConfirm = function(id){
-    transition(DELETING);
+    transition(DELETING, true);
 
-    props.cancelInterview(id).then(() => transition(EMPTY)).catch((err) => console.log(err));
+    props
+      .cancelInterview(id)
+      .then(() => transition(EMPTY))
+      .catch((err) => transition(ERROR_DELETING, true));
 
 
   }
@@ -68,7 +76,9 @@ export default function Appointment(props){
       {mode === CONFIRM && (<Confirm onConfirm={() => onDeleteConfirm(props.id)} message="Delete?" onCancel={() => back()}/>)}
       {mode === DELETING && (<Status message="Deleting"/>)}
       {mode === EDIT && (<Form interviewers={props.interviewers} name={props.interview.student} interviewer={props.interview.interviewer.id} onCancel={() => back()} onSave={save}  ></Form>)}
-      
+      {mode === ERROR_SAVING && (<Error onClose={() => back()} message="Error Saving"></Error>)}
+      {mode === ERROR_DELETING && (<Error onClose={() => back()} message="Error Deleting"></Error>)}
+
 
     </article>
   )

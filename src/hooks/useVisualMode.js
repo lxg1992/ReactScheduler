@@ -7,9 +7,9 @@ export default function useVisualMode(initial){
   const transition = (mode, replace = false) => {    
     setMode(mode);
     if(replace){
-      history.pop();
+      setHistory(prev => ([...prev].slice(0,-1)))
     }
-    setHistory([...history, mode]);
+    setHistory(prev => ([...prev, mode]));
   }
 
   const back = () => {
@@ -22,5 +22,5 @@ export default function useVisualMode(initial){
     back
   }
 }
-
+ 
 
