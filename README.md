@@ -1,6 +1,6 @@
 # React Interview Scheduler
 
-**React JS based web-application which highlights the importance of hooks (useState, useEffect etc.) use of function based components, and test driven development**
+**React JS based web-application which highlights the importance of hooks (useState, useEffect etc.) use of function based components, and Test Driven Development**
 
 ## Setup
 
@@ -24,4 +24,5 @@ npm test
 npm run storybook
 ```
 
+[Adding](docs/sc1.jpg)
 
