@@ -24,5 +24,6 @@ npm test
 npm run storybook
 ```
 
-[Adding](docs/sc1.jpg)
+![Adding](https://github.com/lxg1992/ReactScheduler/blob/master/docs/sc1.png?raw=true)
+![Added](https://github.com/lxg1992/ReactScheduler/blob/master/docs/sc2.png?raw=true)
 
