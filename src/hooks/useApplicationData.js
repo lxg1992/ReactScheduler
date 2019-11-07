@@ -48,7 +48,7 @@ const [state, dispatch] = useReducer(reducer, initial);
 
   
   const bookInterview = function(id, interview){
-    console.log(id,interview);
+ 
     const appointment = {
       ...state.appointments[id],
       interview: {...interview}
