@@ -27,7 +27,7 @@ function reducer(state, action) {
       return {...state,...action.value}
     }
     case SET_SPOTS: {
-      return {...state.days.spots, ...action.value}
+      return {...state, ...action.value}
     }
     default:
       throw new Error(
@@ -38,6 +38,16 @@ function reducer(state, action) {
 
 const [state, dispatch] = useReducer(reducer, initial);
 
+function getDayFromAppointment(id) {
+  let dayId = 0;
+  for (let i = 0; i <= 25; i += 5) {
+    if (i < id) {
+      dayId++
+    } else {
+      return dayId
+    }
+  }
+}
 
 
 
@@ -48,7 +58,16 @@ const [state, dispatch] = useReducer(reducer, initial);
 
   
   const bookInterview = function(id, interview){
- 
+    const dayId = getDayFromAppointment(id);
+
+    let spots;
+
+    if(!state.appointments[id].interview){
+      spots = state.days[dayId - 1].spots - 1;
+    } else {
+      spots = state.days[dayId - 1].spots;
+    }
+
     const appointment = {
       ...state.appointments[id],
       interview: {...interview}
@@ -57,9 +76,21 @@ const [state, dispatch] = useReducer(reducer, initial);
       ...state.appointments,
       [id]: appointment
     }
+
+    let days = state.days.map((item, index) => {
+      if (index !== dayId - 1){
+        return item
+      }
+      return {
+        ...item,
+        spots
+      }
+    })
     return axios.put(`/api/appointments/${id}`, {
       interview
-    }).then(dispatch({type: SET_INTERVIEW, value: {appointments}}))
+    })
+    .then(dispatch({type: SET_INTERVIEW, value: {appointments}}))
+    .then(dispatch({type: SET_SPOTS, value: {days}}))
       
      // .then(()=>getSpots());
   }
@@ -67,10 +98,31 @@ const [state, dispatch] = useReducer(reducer, initial);
 
 
   const cancelInterview = function(id){
+    const dayId = getDayFromAppointment(id);
+
+    let spots = state.days[dayId - 1].spots + 1;
+    
+    let days = state.days.map((item, index) => {
+      if (index !== dayId - 1){
+        return item
+      }
+      return {
+        ...item,
+        spots
+      }
+    })
+
     
     return axios.delete(`/api/appointments/${id}`, {
       interview: null
-    }).then(dispatch({type: SET_INTERVIEW, value: null}))
+    })
+    .then(dispatch({type: SET_INTERVIEW, value: null}))
+    .then(dispatch({type: SET_SPOTS, value: {days}}))
+
+      
+
+
+      
       
 
   }
